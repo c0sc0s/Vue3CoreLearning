@@ -48,6 +48,8 @@ export function effect(fn: Function, options?: effectOptions) {
   const _scheduler = options && options.scheduler;
   const _effect = new ReactiveEffect(fn, _scheduler);
   _effect.run();
+
+  return _effect.run.bind(_effect);
 }
 
 //effect(fn:Function, options?:):
@@ -59,3 +61,5 @@ export function effect(fn: Function, options?: effectOptions) {
 //scheduler
 //1.调用effect,不执行
 //2.如果有scheduler, 依赖的数据发生变化时，不会执行 fn(run), 而是执行 scheduler
+
+//返回值: run函数
