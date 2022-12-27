@@ -30,12 +30,20 @@ function cleanupEffect(effect: ReactiveEffect) {
     dep.delete(effect);
     effect.onStop && effect.onStop();
   });
+  effect.deps.length = 0;
 }
 
 //track
 let activeEffect: ReactiveEffect;
 let targetMap = new Map();
+
+function shouldTrack() {
+  return activeEffect && !activeEffect.active;
+}
+
 export function track(target: object, key: any) {
+  if (shouldTrack()) return;
+
   let depsMap = targetMap.get(target);
   if (!depsMap) {
     depsMap = new Map();
@@ -43,12 +51,16 @@ export function track(target: object, key: any) {
   }
 
   let dep = depsMap.get(key);
+
   if (!dep) {
     dep = new Set();
     depsMap.set(key, dep);
   }
-  dep.add(activeEffect);
-  activeEffect && activeEffect.deps.push(dep);
+
+  if (!dep.has(activeEffect)) {
+    activeEffect && activeEffect.deps.push(dep);
+    dep.add(activeEffect);
+  }
 }
 
 //trigger
