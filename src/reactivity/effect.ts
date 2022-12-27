@@ -1,12 +1,12 @@
 import { extend } from "../shared";
 
-class ReactiveEffect {
+export class ReactiveEffect {
   private _fn: Function;
   public onStop: Function | undefined;
-  public scheduler: Function | undefined;
 
-  constructor(fn: Function) {
+  constructor(fn: Function, public scheduler?) {
     this._fn = fn;
+    this.scheduler = scheduler;
   }
 
   public active: boolean = true;
@@ -41,6 +41,13 @@ function shouldTrack() {
   return activeEffect && !activeEffect.active;
 }
 
+export function trackEffects(dep) {
+  if (activeEffect && !dep.has(activeEffect)) {
+    activeEffect.deps.push(dep);
+    dep.add(activeEffect);
+  }
+}
+
 export function track(target: object, key: any) {
   if (shouldTrack()) return;
 
@@ -57,15 +64,10 @@ export function track(target: object, key: any) {
     depsMap.set(key, dep);
   }
 
-  if (!dep.has(activeEffect)) {
-    activeEffect && activeEffect.deps.push(dep);
-    dep.add(activeEffect);
-  }
+  trackEffects(dep);
 }
 
-//trigger
-export function trigger(target: object, key: any) {
-  let dep = targetMap.get(target).get(key);
+export function runEffects(dep) {
   for (const effect of dep) {
     if (effect.scheduler) {
       effect.scheduler();
@@ -73,6 +75,12 @@ export function trigger(target: object, key: any) {
       effect.run();
     }
   }
+}
+
+//trigger
+export function trigger(target: object, key: any) {
+  let dep = targetMap.get(target).get(key);
+  runEffects(dep);
 }
 
 //effect

@@ -10,12 +10,13 @@ export const enum ReactiveFlags {
   IS_READONLY = "__v_isReadOnly",
 }
 
-function createReactiveObject(raw, readonly, shallow = false) {
+function createReactiveObject(raw: object, readonly = false, shallow = false) {
   if (shallow) {
     return readonly
       ? new Proxy(raw, shallowReadonlyHandler)
       : new Proxy(raw, shallowMutableHandler);
   }
+
   return readonly
     ? new Proxy(raw, readonlyHandler)
     : new Proxy(raw, mutableHandler);
@@ -29,8 +30,8 @@ export function isReadOnly(value) {
   return !!value[ReactiveFlags.IS_READONLY];
 }
 
-export function reactive(raw: any): any {
-  return createReactiveObject(raw, false);
+export function reactive(raw: object): any {
+  return createReactiveObject(raw);
 }
 
 export function readonly(raw: any) {
