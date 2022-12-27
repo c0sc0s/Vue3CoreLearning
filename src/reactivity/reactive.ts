@@ -10,6 +10,7 @@ export const enum ReactiveFlags {
   IS_READONLY = "__v_isReadOnly",
 }
 
+//1.响应式数据分类:
 function createReactiveObject(raw: object, readonly = false, shallow = false) {
   if (shallow) {
     return readonly
