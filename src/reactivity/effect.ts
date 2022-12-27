@@ -1,4 +1,5 @@
 import { extend } from "../shared";
+
 class ReactiveEffect {
   private _fn: Function;
   public onStop: Function | undefined;
@@ -31,6 +32,8 @@ function cleanupEffect(effect: ReactiveEffect) {
   });
 }
 
+//track
+let activeEffect: ReactiveEffect;
 let targetMap = new Map();
 export function track(target: object, key: any) {
   let depsMap = targetMap.get(target);
@@ -48,6 +51,7 @@ export function track(target: object, key: any) {
   activeEffect && activeEffect.deps.push(dep);
 }
 
+//trigger
 export function trigger(target: object, key: any) {
   let dep = targetMap.get(target).get(key);
   for (const effect of dep) {
@@ -59,11 +63,12 @@ export function trigger(target: object, key: any) {
   }
 }
 
-let activeEffect: ReactiveEffect;
+//effect
 interface effectOptions {
   scheduler?: Function;
   onStop?: Function;
 }
+
 export function effect(fn: Function, options?: effectOptions) {
   const _effect = new ReactiveEffect(fn);
 
@@ -78,6 +83,7 @@ export function effect(fn: Function, options?: effectOptions) {
   return runner;
 }
 
+//stop
 export function stop(runner) {
   runner.effect.stop();
 }
