@@ -1,4 +1,6 @@
-# Vue3CoreLearning
-Practice code for achieving some  modules in vue3 core to deep-in vue
+# vue3 源码分析和实现
 
-# Vue3 源码实现 mini-vue
+> 说明： 本项目基于 mini-vue 项目进行学习和分析
+
+- 后续会在b站出系列视频进行讲解
+- 代码分析在 issues
