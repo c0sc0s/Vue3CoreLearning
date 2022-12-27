@@ -1,16 +1,34 @@
+import { extend } from "../shared";
 class ReactiveEffect {
   private _fn: Function;
+  public onStop: Function | undefined;
   public scheduler: Function | undefined;
 
-  constructor(fn: Function, scheduler?: Function | undefined) {
+  constructor(fn: Function) {
     this._fn = fn;
-    this.scheduler = scheduler;
   }
+
+  public active: boolean = true;
+  public deps: any[] = [];
 
   run() {
     activeEffect = this;
     return this._fn();
   }
+
+  stop() {
+    if (this.active) {
+      cleanupEffect(this);
+      this.active = false;
+    }
+  }
+}
+
+function cleanupEffect(effect: ReactiveEffect) {
+  effect.deps.forEach((dep: any) => {
+    dep.delete(effect);
+    effect.onStop && effect.onStop();
+  });
 }
 
 let targetMap = new Map();
@@ -27,6 +45,7 @@ export function track(target: object, key: any) {
     depsMap.set(key, dep);
   }
   dep.add(activeEffect);
+  activeEffect && activeEffect.deps.push(dep);
 }
 
 export function trigger(target: object, key: any) {
@@ -42,24 +61,23 @@ export function trigger(target: object, key: any) {
 
 let activeEffect: ReactiveEffect;
 interface effectOptions {
-  scheduler: Function;
+  scheduler?: Function;
+  onStop?: Function;
 }
 export function effect(fn: Function, options?: effectOptions) {
-  const _scheduler = options && options.scheduler;
-  const _effect = new ReactiveEffect(fn, _scheduler);
+  const _effect = new ReactiveEffect(fn);
+
+  //options
+  extend(_effect, options);
+
   _effect.run();
 
-  return _effect.run.bind(_effect);
+  const runner: any = _effect.run.bind(_effect);
+  runner.effect = _effect;
+
+  return runner;
 }
 
-//effect(fn:Function, options?:):
-
-//1.执行一次fn
-//2.在执行该函数的过程中，可能会访问到一些响应式数据(之前被reactive处理的), 则会通过 track 将此函数标记为依赖该响应式数据
-//3.每次修改函数依赖的响应式数据时候，就调用该函数
-
-//scheduler
-//1.调用effect,不执行
-//2.如果有scheduler, 依赖的数据发生变化时，不会执行 fn(run), 而是执行 scheduler
-
-//返回值: run
+export function stop(runner) {
+  runner.effect.stop();
+}
