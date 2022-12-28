@@ -7,3 +7,6 @@ export const isObject = (val) => {
 export const hasNoChanged = (oldVal, newVal) => {
   return Object.is(oldVal, newVal);
 };
+
+export const hasOwn = (setupSate: any, key: any) =>
+  Object.prototype.hasOwnProperty.call(setupSate, key);

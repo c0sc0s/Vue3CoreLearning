@@ -37,8 +37,8 @@ function createSetter() {
 const get = createGetter();
 const set = createSetter();
 const readOnlyGet = createGetter(true);
-const readOnlySet = function () {
-  console.warn("ReadOnly property, can not be set");
+const readOnlySet = function (target, key, val) {
+  console.warn(`${key} is ReadOnly property, can not be set`);
   return true;
 };
 const shallowMutableHandlerGet = createGetter(false, true);
