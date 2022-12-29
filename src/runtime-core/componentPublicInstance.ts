@@ -1,16 +1,9 @@
-import { hasOwn } from "../shared";
+import { hasOwn } from "../shared/index";
 
 const publicPropertiesMap = {
   $el: (i) => i.vnode.el,
+  $slots: (i) => i.slots,
 };
-
-//this.$el --> container
-//this.$el
-
-//this.msg
-
-//data(){return{}}
-//instance.proxt -> Proxy({_:instance},handler)
 
 export const PublicInstanceProxyHandlers = {
   get({ _: instance }, key) {
