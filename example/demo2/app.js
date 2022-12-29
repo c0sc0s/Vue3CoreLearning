@@ -28,7 +28,10 @@ export const App = {
           this.msg
         ),
         h(Foo, {
-          count: 100
+          count: 100,
+          onAddFoo(...e) {
+            console.log(...e, "onAddFoo");
+          }
         })
       ]
     )

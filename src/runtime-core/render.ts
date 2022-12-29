@@ -20,8 +20,8 @@ function processComponent(vnode: any, container: any) {
   mountComponent(vnode, container);
 }
 function mountComponent(initialVNode: any, container) {
-  //根据initialVNode -> 创建组件实例对象
   const instance = createComponentInstance(initialVNode);
+
   setupComponent(instance);
 
   setupRendereEffect(instance, container);
