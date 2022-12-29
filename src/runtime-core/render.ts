@@ -7,12 +7,18 @@ export function render(vnode, container) {
 }
 
 function patch(vnode, container) {
-  const { shapeFlag } = vnode;
+  const { type, shapeFlag } = vnode;
 
-  if (shapeFlag & ShapeFlags.ELEMENT) {
-    processElement(vnode, container);
-  } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    processComponent(vnode, container);
+  switch (type) {
+    case "Fragment":
+      processFragment(vnode, container);
+      break;
+    default:
+      if (shapeFlag & ShapeFlags.ELEMENT) {
+        processElement(vnode, container);
+      } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+        processComponent(vnode, container);
+      }
   }
 }
 
@@ -73,4 +79,8 @@ function mountChildren(vnode, container) {
   vnode.children.forEach((v) => {
     patch(v, container);
   });
+}
+
+function processFragment(vnode: any, container: any) {
+  mountChildren(vnode, container);
 }
