@@ -10,7 +10,7 @@ export function createApp(rootComponent) {
 
       //vnode -> render -> dom
 
-      render(vnode, rootContainer);
+      render(vnode, rootContainer, null);
     },
   };
 }

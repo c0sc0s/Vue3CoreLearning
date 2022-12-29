@@ -1,10 +1,10 @@
 //define ShapeFlags
 export const enum ShapeFlags {
-  ELEMENT = 1, //00001
-  STATEFUL_COMPONENT = 1 << 1, //00010
-  TEXT_CHILDREN = 1 << 2, //00100
-  ARRAY_CHILDREN = 1 << 3, //01000
-  SLOT_CHILDREN = 1 << 4, //10000
+  ELEMENT = 1, //00001  UI
+  STATEFUL_COMPONENT = 1 << 1, //00010 Component
+  TEXT_CHILDREN = 1 << 2, //00100  Text Children
+  ARRAY_CHILDREN = 1 << 3, //01000  VNodeArray Children
+  SLOT_CHILDREN = 1 << 4, //10000 Slot Children
 }
 
 //get ShapeFlag
