@@ -15,14 +15,27 @@ function patchProp(el, key, preVal, nextVal) {
   }
 }
 
+function remove(child) {
+  const parent = child.parentNode;
+  if (parent) {
+    parent.removeChild(child);
+  }
+}
+
 function insert(el, parent) {
   parent.append(el);
+}
+
+function setElementText(container, nextVnodeChildren) {
+  container.textContent = nextVnodeChildren;
 }
 
 const render = createRenderer({
   createElement,
   patchProp,
   insert,
+  remove,
+  setElementText,
 });
 
 export const createApp = render.createApp;
