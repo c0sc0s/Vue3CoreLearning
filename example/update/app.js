@@ -4,13 +4,37 @@ export const App = {
   name: "App",
   setup() {
     const count = ref(0);
+
     const onClick = () => {
       count.value++;
-    };
+    }
+
+    const props = ref({
+      foo: "foo1",
+      bar: "bar",
+    })
+
+    const onChangePropsDemo1 = () => {
+      props.value.foo = "new-foo";
+    }
+
+    const onChangePropsDemo2 = () => {
+      props.value.foo = undefined;
+    }
+
+    const onChangePropsDemo3 = () => {
+      props.value = {
+        foo: "foo",
+      }
+    }
 
     return {
       count,
-      onClick
+      onClick,
+      onChangePropsDemo1,
+      onChangePropsDemo2,
+      onChangePropsDemo3,
+      props
     }
   },
   render() {
@@ -22,11 +46,17 @@ export const App = {
       [
         h("div", {}, "count" + this.count),
         h(
+
+          "p",
+          {},
+          `props:foo ${this.props.foo},`
+        ),
+        h(
           "button",
           {
-            onClick: this.onClick,
+            onClick: this.onChangePropsDemo1,
           },
-          "click"
+          "changeProps1-改变值"
         )
       ]
     )

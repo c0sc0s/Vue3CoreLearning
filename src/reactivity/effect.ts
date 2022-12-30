@@ -51,6 +51,8 @@ export function trackEffects(dep) {
 export function track(target: object, key: any) {
   if (shouldTrack()) return;
 
+  console.log("track");
+
   let depsMap = targetMap.get(target);
   if (!depsMap) {
     depsMap = new Map();
