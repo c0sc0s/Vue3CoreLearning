@@ -10,7 +10,7 @@ export const App = {
     }
 
     const props = ref({
-      foo: "foo1",
+      foo: "foo",
       bar: "bar",
     })
 
@@ -42,21 +42,30 @@ export const App = {
       "div",
       {
         id: "root",
+        ...this.props,
       },
       [
         h("div", {}, "count" + this.count),
-        h(
-
-          "p",
-          {},
-          `props:foo ${this.props.foo},`
-        ),
         h(
           "button",
           {
             onClick: this.onChangePropsDemo1,
           },
           "changeProps1-改变值"
+        ),
+        h(
+          "button",
+          {
+            onClick: this.onChangePropsDemo2,
+          },
+          "changeProps2-undefined"
+        ),
+        h(
+          "button",
+          {
+            onClick: this.onChangePropsDemo3,
+          },
+          "changeProps2-noInNew"
         )
       ]
     )
