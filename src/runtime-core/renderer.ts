@@ -216,6 +216,50 @@ export function createRenderer(options) {
     }
     // 中间对比
     else {
+      let
+        s1 = i,
+        s2 = i,
+        patched = 0;
+
+      const
+        toBePatched = e2 - s2 + 1,
+        keyToNewIndexMap = new Map();
+
+      for (let i = s2; i <= e2; i++) {
+        const nextChild = nextVnodeChildren[i];
+        keyToNewIndexMap.set(nextChild.key, i);
+      }
+
+      for (let i = s1; i <= e1; i++) {
+        const prevChild = preVnodeChildren[i];
+
+        if (patched >= toBePatched) {
+          hostRemove(prevChild.el);
+          continue;
+        }
+
+        let newIndex;
+        if (prevChild.key) {
+          newIndex = keyToNewIndexMap.get(prevChild.key);
+        } else {
+          for (let j = s2; j < e2; j++) {
+            if (isSameVNodeType(prevChild, nextVnodeChildren[j])) {
+              newIndex = j;
+
+              break;
+            }
+          }
+        }
+
+        if (!newIndex) {
+          hostRemove(prevChild.el);
+        } else {
+          patch(prevChild, nextVnodeChildren[newIndex], container, parentComponent, null);
+          patched++;
+        }
+
+      }
+
     }
 
     function isSameVNodeType(n1, n2) {
